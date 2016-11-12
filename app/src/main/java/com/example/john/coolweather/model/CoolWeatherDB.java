@@ -13,9 +13,6 @@ import java.util.List;
 
 /**
  * Created by John on 2016/11/12.
- */
-
-/**
  * 对数据库进行管理
  */
 
