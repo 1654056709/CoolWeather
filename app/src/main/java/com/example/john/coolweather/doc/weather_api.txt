@@ -1,0 +1,4 @@
+http://www.weather.com.cn/data/sk/101110102.html
+
+//获取到所在地的天气情况
+http://api.jirengu.com/weather.php
