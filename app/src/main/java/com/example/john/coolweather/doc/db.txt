@@ -1,0 +1,25 @@
+//创建数据库 cool_weather
+    1.省份（Province）
+        sql:
+            create table province  (
+                id Integer primary key autoincrement ,
+                provice_name text ,
+                provice_code text
+                );
+    2.市（city)
+          sql:
+             create table city (
+                 id Integer primary key autoincrement ,
+                 city_name text ,
+                 city_code text ,
+                 provice_id Integer ,
+                 );
+    3.县（country)
+          sql:
+             create table country (
+                id Integer primary key autoincrement ,
+                country_name text ,
+                country_code text ,
+                city_id Integer ,
+                );
+
