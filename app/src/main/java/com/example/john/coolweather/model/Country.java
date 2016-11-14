@@ -10,7 +10,7 @@ package com.example.john.coolweather.model;
 public class Country {
     private Integer id;
     private String country_name;
-    private String coutry_code;
+    private String country_code;
     private Integer city_id;
 
     public Integer getId() {
@@ -30,11 +30,11 @@ public class Country {
     }
 
     public String getCoutry_code() {
-        return coutry_code;
+        return country_code;
     }
 
-    public void setCoutry_code(String coutry_code) {
-        this.coutry_code = coutry_code;
+    public void setCoutry_code(String country_code) {
+        this.country_code = country_code;
     }
 
     public Integer getCity_id() {

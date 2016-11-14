@@ -2,9 +2,6 @@ package com.example.john.coolweather.model;
 
 /**
  * Created by John on 2016/11/11.
- */
-
-/**
  * 市实体
  */
 

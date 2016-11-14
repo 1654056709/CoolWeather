@@ -1,6 +1,7 @@
 package com.example.john.coolweather.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -17,6 +18,7 @@ public class HttpUtil {
                 @Override
                 public void run() {
                     HttpURLConnection conn = null;
+                    ByteArrayOutputStream baos = null;
                     try {
                         URL url = new URL(address);
                         conn = (HttpURLConnection) url.openConnection();
@@ -24,13 +26,14 @@ public class HttpUtil {
                         int responseCode = conn.getResponseCode();
                         if (responseCode == 200) {
                             InputStream inputStream = conn.getInputStream();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            baos = new ByteArrayOutputStream();
                             byte[] buff = new byte[1024];
                             int len = -1;
                             while ((len = inputStream.read(buff)) != -1) {
                                 baos.write(buff, 0, len);
                             }
                             if (listener != null) {
+
                                 listener.onSuccess(new String(baos.toString().getBytes(), "UTF-8"));
                             }
                         }
@@ -43,6 +46,13 @@ public class HttpUtil {
                         if (conn != null) {
                             conn.disconnect();
                         }
+                        if (baos != null) {
+                            try {
+                                baos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }.start();
@@ -51,4 +61,5 @@ public class HttpUtil {
         }
 
     }
+
 }

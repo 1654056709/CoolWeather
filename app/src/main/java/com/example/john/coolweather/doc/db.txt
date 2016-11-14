@@ -12,7 +12,7 @@
                  id Integer primary key autoincrement ,
                  city_name text ,
                  city_code text ,
-                 provice_id Integer ,
+                 provice_id Integer
                  );
     3.县（country)
           sql:
@@ -20,6 +20,6 @@
                 id Integer primary key autoincrement ,
                 country_name text ,
                 country_code text ,
-                city_id Integer ,
+                city_id Integer
                 );
 

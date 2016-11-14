@@ -12,8 +12,8 @@ public class CoolWeathSQLiteOpenHelper extends SQLiteOpenHelper {
     //创建省份表
     private static final String TABLE_PROVINCE = "create table province  (\n" +
             "                id Integer primary key autoincrement ,\n" +
-            "                provice_name text ,\n" +
-            "                provice_code text\n" +
+            "                province_name text ,\n" +
+            "                province_code text\n" +
             "                );";
 
     //创建市表
@@ -21,7 +21,7 @@ public class CoolWeathSQLiteOpenHelper extends SQLiteOpenHelper {
             "                 id Integer primary key autoincrement ,\n" +
             "                 city_name text ,\n" +
             "                 city_code text ,\n" +
-            "                 provice_id Integer ,\n" +
+            "                 province_id Integer\n" +
             "                 );";
 
     //创建县表
@@ -29,7 +29,7 @@ public class CoolWeathSQLiteOpenHelper extends SQLiteOpenHelper {
             "                id Integer primary key autoincrement ,\n" +
             "                country_name text ,\n" +
             "                country_code text ,\n" +
-            "                city_id Integer ,\n" +
+            "                city_id Integer\n" +
             "                );";
 
     /**

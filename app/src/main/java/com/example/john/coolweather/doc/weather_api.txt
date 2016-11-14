@@ -2,3 +2,9 @@ http://www.weather.com.cn/data/sk/101110102.html
 
 //获取到所在地的天气情况
 http://api.jirengu.com/weather.php
+
+//由country_code  ->  weather_code  api:
+http://www.weather.com.cn/data/list3/city+country_code+".xml"
+
+//由weather_code -> weather_info  api:
+http://www.weather.com.cn/data/cityinfo+weather_code+".html";

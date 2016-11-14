@@ -68,14 +68,17 @@ public class CoolWeatherDB {
         Cursor cursor = db.query(ConstantUtil.TableProvince.TABLE_NAME, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             province = new Province();
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
             String provice_name = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableProvince.PROVINCE_NAME));
             String provice_code = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableProvince.PROVINCE_CODE));
             province.setProvince_name(provice_name);
             province.setProvince_code(provice_code);
+            province.setId(id);
 
             provinces.add(province);
         }
         return provinces;
+
     }
 
     /**
@@ -104,8 +107,10 @@ public class CoolWeatherDB {
         Cursor cursor = db.query(ConstantUtil.TableCity.TABLE_NAME, null, ConstantUtil.TableCity.PROVINCE_ID + "=?", new String[]{province_id + ""}, null, null, null);
         while (cursor.moveToNext()) {
             city = new City();
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
             String city_name = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableCity.CITY_NAME));
             String city_code = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableCity.CITY_CODE));
+            city.setId(id);
             city.setCity_name(city_name);
             city.setCity_code(city_code);
             city.setProvince_id(province_id);
@@ -143,8 +148,10 @@ public class CoolWeatherDB {
         Cursor cursor = db.query(ConstantUtil.TableCountry.TABLE_NAME, null, ConstantUtil.TableCountry.CITY_ID + "=?", new String[]{city_id + ""}, null, null, null);
         while (cursor.moveToNext()) {
             country = new Country();
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
             String country_name = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableCountry.COUNTRY_NAME));
             String country_code = cursor.getString(cursor.getColumnIndex(ConstantUtil.TableCountry.COUNTRY_CODE));
+            country.setId(id);
             country.setCountry_name(country_name);
             country.setCoutry_code(country_code);
             country.setCity_id(city_id);
