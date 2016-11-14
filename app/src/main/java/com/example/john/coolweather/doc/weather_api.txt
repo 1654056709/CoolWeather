@@ -7,4 +7,9 @@ http://api.jirengu.com/weather.php
 http://www.weather.com.cn/data/list3/city+country_code+".xml"
 
 //由weather_code -> weather_info  api:
+//该api废弃 ->拿不到请求的返回数据
 http://www.weather.com.cn/data/cityinfo+weather_code+".html";
+
+
+//该api可以使用
+http://wthrcdn.etouch.cn/weather_mini?city=城市名（URLEncode编码）
