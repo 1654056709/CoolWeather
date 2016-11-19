@@ -145,6 +145,8 @@ public class Utility {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(CoolWeatherApplication.getContext());
         LogUtil.d(WeatherActivity.TAG, "end");
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        //是否有显示天气的城市
+        editor.putBoolean("city_selected", true);
         editor.putString("city_name", weatherInfo.getCityName());
         editor.putString("min_temp", weatherInfo.getMinTemp());
         editor.putString("max_temp", weatherInfo.getMaxTemp());

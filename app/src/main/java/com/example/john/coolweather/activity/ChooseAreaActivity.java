@@ -2,7 +2,11 @@ package com.example.john.coolweather.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.john.coolweather.R;
+import com.example.john.coolweather.app.CoolWeatherApplication;
 import com.example.john.coolweather.model.City;
 import com.example.john.coolweather.model.CoolWeatherDB;
 import com.example.john.coolweather.model.Country;
@@ -64,9 +69,32 @@ public class ChooseAreaActivity extends Activity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        //判断当前的这个活动是否是从WeatherActivity中跳转来的
+        boolean isFromWeatherActivity = getIntent().getBooleanExtra("is_from_weather_activity", false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(CoolWeatherApplication.getContext());
+        //判断文件中是否有城市被选中且不是从WeatherActivity中跳转来的，如果没有就手动选择某个地
+        if (sharedPreferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+            WeatherActivity.actionStart(this, null);
+            //当前活动退出任务栈
+            this.finish();
+            return;
+        }
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.layout_choose_area);
         init();
+    }
+
+    /**
+     * 跳转到该活动中
+     *
+     * @param context
+     * @param isFromWeatherActivity
+     */
+    public static void actionStart(Context context, boolean isFromWeatherActivity) {
+        Intent intent = new Intent(context, ChooseAreaActivity.class);
+        intent.putExtra("is_from_weather_activity", isFromWeatherActivity);
+        context.startActivity(intent);
     }
 
     public void init() {
@@ -92,6 +120,7 @@ public class ChooseAreaActivity extends Activity {
                     //跳转显示该县的具体天气信息页面
                     String country_name = countries.get(i).getCountry_name();
                     WeatherActivity.actionStart(ChooseAreaActivity.this, country_name);
+                    ChooseAreaActivity.this.finish();
                 }
             }
         });

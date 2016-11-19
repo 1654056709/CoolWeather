@@ -9,11 +9,13 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.john.coolweather.R;
 import com.example.john.coolweather.app.CoolWeatherApplication;
+import com.example.john.coolweather.service.AutoUpdateService;
 import com.example.john.coolweather.util.ConstantUtil;
 import com.example.john.coolweather.util.HttpCallbackListener;
 import com.example.john.coolweather.util.HttpUtil;
@@ -61,6 +63,17 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
     private TextView max_temp;
 
 
+    /**
+     * 切换城市
+     */
+    private Button switch_city;
+
+    /**
+     * 手动刷新天气
+     */
+    private Button refresh_weather;
+
+
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -95,23 +108,24 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         weather_desc = (TextView) findViewById(R.id.weather_desc);
         min_temp = (TextView) findViewById(R.id.min_temp);
         max_temp = (TextView) findViewById(R.id.max_temp);
+        switch_city = (Button) findViewById(R.id.switch_city);
+        switch_city.setOnClickListener(this);
+        refresh_weather = (Button) findViewById(R.id.refresh_weather);
+        refresh_weather.setOnClickListener(this);
 
         //得到县级地区代号
         String country_name = getIntent().getStringExtra(ConstantUtil.TableCountry.COUNTRY_NAME);
 
         if (!TextUtils.isEmpty(country_name)) {
-            try {
-                country_name = URLEncoder.encode(country_name, "UTF-8");
-                LogUtil.d(TAG, "url_code=" + country_name);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
             //不显示，数据信息没有处理完
             weather_info_layout.setVisibility(View.INVISIBLE);
             city_name.setVisibility(View.INVISIBLE);
             publish_text.setText("同步中...");
             LogUtil.d(TAG, "country_code :" + country_name);
             queryFromServer(country_name);
+        } else {
+            //城市名为空，直接显示天气信息（已经选中城市的天气信息）
+            showWeatherInfo();
         }
     }
 
@@ -121,11 +135,18 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
      *
      * @param country_name 城市名
      */
-    private void queryFromServer(String country_name) {
+    public void queryFromServer(String country_name) {
+        try {
+            country_name = URLEncoder.encode(country_name, "UTF-8");
+            LogUtil.d(TAG, "url_code=" + country_name);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String address = ConstantUtil.WeatherApi.BASE_WEATHER_INFO_ADDRESS + country_name;
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onSuccess(String data) {
+                //将获取到的数据写入到shared_pres文件夹下的以当前应用程序的包名的xml文件中
                 Utility.handleWeatherResponse(data);
                 LogUtil.d(TAG, "onSuccess");
                 runOnUiThread(new Runnable() {
@@ -148,6 +169,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
      * 显示天气信息
      */
     private void showWeatherInfo() {
+        //天气信息存在shared_pres目录中，以当前应用程序的包名作为名称
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(CoolWeatherApplication.getContext());
         //城市名称
         String city_name = sharedPreferences.getString("city_name", "");
@@ -168,6 +190,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         //让隐藏的内容显示出来
         weather_info_layout.setVisibility(View.VISIBLE);
         this.city_name.setVisibility(View.VISIBLE);
+
+
+        //启动后台自动更新天气xml文件服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        this.startService(intent);
     }
 
 
@@ -178,6 +205,26 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
      */
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            //切换城市
+            case R.id.switch_city:
+                ChooseAreaActivity.actionStart(this, true);
+                this.finish();
+                break;
+
+            //刷新天气
+            case R.id.refresh_weather:
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(CoolWeatherApplication.getContext());
+                String city_name = sharedPreferences.getString("city_name", "");
+                this.publish_text.setText("同步中...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                queryFromServer(city_name);
+                break;
+        }
 
     }
 }
